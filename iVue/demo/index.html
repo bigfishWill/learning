@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:v-on="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <title>VUE index</title>
+    <!--收藏夹显示图标-->
+    <link rel="shortcut icon" href="googleg_lodp.ico" type="image/x-icon">
+    <!--网页标题左侧显示-->
+    <link rel="icon" href="favicon.png" type="image/png">
+    <script src="js/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+</head>
+
+<body>
+    <div id="app">
+        <p>{{message}}</p>
+        <button v-if="btnSeen" v-on:click="btnClick">{{content}}</button>
+    </div>
+    <script>
+    new Vue({
+        el: '#app',
+        data: {
+            message: 'Hello Vue.js!',
+            content: "click me",
+            btnSeen: true
+        },
+        methods: {
+            btnClick: function() {
+                this.$http.get('test.json').then(response => {
+                    console.log(response.body);
+                }, response => {
+                    console.log("error callback")
+                });
+            }
+        }
+    })
+    </script>
+</body>
+
+</html>
