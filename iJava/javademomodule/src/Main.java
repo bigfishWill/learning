@@ -1,5 +1,3 @@
-import com.sun.org.apache.bcel.internal.classfile.Code;
-import service.IdWorker;
 import service.Sort;
 
 import java.text.SimpleDateFormat;
@@ -9,8 +7,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -64,7 +60,7 @@ public class Main {
 //        print("sdf","dsfsd","dsfsd");
 
         Sort sortClass = new Sort();
-        sortClass.setSort();
+        sortClass.setListSort();
 
     }
 
