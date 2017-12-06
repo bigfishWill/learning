@@ -59,8 +59,7 @@ public class Main {
 
 //        print("sdf","dsfsd","dsfsd");
 
-        Sort sortClass = new Sort();
-        sortClass.setListSort();
+        Sort sort etListSort();
 
     }
 
