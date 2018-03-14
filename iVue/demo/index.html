@@ -1,41 +1,304 @@
 <!DOCTYPE html>
-<html xmlns:v-on="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="utf-8">
     <title>VUE index</title>
     <!--收藏夹显示图标-->
-    <link rel="shortcut icon" href="googleg_lodp.ico" type="image/x-icon">
+    <link rel="shortcut" href="googleg_lodp.ico" type="image/x-icon">
     <!--网页标题左侧显示-->
     <link rel="icon" href="favicon.png" type="image/png">
     <script src="js/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.3.4"></script>
+    <script src="js/vue-resource.min.js"></script>
+    <style>
+        .fade-enter-active, .fade-leave-active {
+            transition: opacity .5s;
+        }
+        .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+            opacity: 0;
+        }
+    </style>
+
 </head>
 
 <body>
-    <div id="app">
-        <p>{{message}}</p>
-        <button v-if="btnSeen" v-on:click="btnClick">{{content}}</button>
+<!--vue实例 并初始化data-->
+<div id="app">
+    {{message}}
+</div>
+
+<!--v-bind使用-->
+<div id="app-2">
+    <span :title="message">
+    鼠标悬停几秒钟查看此处动态绑定的提示信息！
+    </span>
+</div>
+
+<!--全局组件-->
+<div id="app-component">
+    <my-component></my-component>
+</div>
+
+<!--局部组件使用-->
+<div id="app-child-component">
+    <child-component></child-component>
+</div>
+
+<!--传递prop-->
+<div id="app-string-prop">
+    <child-prop message="prop string message"></child-prop>
+</div>
+
+<!--父组件给子组件传递动态prop-->
+<div id="parent-message">
+    <input v-model="parentMsg">
+    <input v-model.lazy="parentMsg">
+    <br>
+    <child v-bind:my-message="parentMsg"></child>
+</div>
+
+<!--计算属性-->
+<div id="app3-computed">
+    {{fullName}}
+    <h1 v-show="1==='1'">Hello!</h1>
+</div>
+
+<ul id="app4-v-for-array">
+    <li v-for="item in items">
+        {{item.message}}
+    </li>
+</ul>
+
+<div id="v-for-object">
+    <div v-for="(value,key,index) in object">
+        {{index}}:{{key}}:{{value}}
     </div>
-    <script>
-    new Vue({
+</div>
+
+<div id="v-on-count">
+    <button @click="counter += 1">add 1</button>
+    <p>The button above has been clicked {{ counter }} times.</p>
+</div>
+
+<div id="v-on-keyup">
+    <div @click.meta="greet">command 点击这里</div>
+    <!--有时也需要在内联语句处理器中访问原始的 DOM 事件。可以用特殊变量 $event 把它传入方法-->
+    <div @click.alt="doSomeThing('你好',$event)">alt 点击这块</div>
+    <p>点击上面</p>
+</div>
+
+<div id="v-model-checkbox">
+    <input type="checkbox" id="checkbox" v-model="checked">
+    <label for="checkbox">{{checked}}</label>
+</div>
+
+<div id="v-model-select-responsive">
+    <select v-model="selected">
+        <option v-for="option in options" :value="option.value">
+            {{option.text}}
+        </option>
+    </select>
+    <span>Selected: {{ selected }}</span>
+</div>
+
+<!--//自定义事件-->
+<div id="counter-event-example">
+    <p>{{ total }}</p>
+    <button-counter v-on:increment="incrementTotal"></button-counter>
+    <button-counter v-on:increment="incrementTotal"></button-counter>
+</div>
+
+</div>
+
+<!--//过渡-->
+<div id="demo-transition">
+    <button @click="show = !show">
+        Toggle
+    </button>
+    <transition name="fade">
+        <p v-if="show">hello</p>
+    </transition>
+</div>
+
+
+<script>
+    //创建vue实例
+    var app = new Vue({
         el: '#app',
         data: {
             message: 'Hello Vue.js!',
             content: "click me",
             btnSeen: true
+        }
+    })
+
+    //创建vue实例
+    var app2 = new Vue({
+        el: '#app-2',
+        data: {
+            message: '页面加载于 ' + new Date().toLocaleString()
+        }
+    })
+
+    //注册组件实例 全局
+    Vue.component('my-component', {
+        template: '<div>A custom component</div>'
+    })
+
+    var app3 = new Vue({
+        el: '#app-component'
+    })
+
+    //局部组件
+    var Child = {
+        template: '<div>A custom component of child</div>'
+    }
+    var app4 = new Vue({
+        el: '#app-child-component',
+        components: {
+            'child-component': Child
+        }
+    })
+
+    //传递prop
+    Vue.component('child-prop', {
+        // 声明 props
+        props: ['message'],
+        // 就像 data 一样，prop 也可以在模板中使用
+        // 同样也可以在 vm 实例中通过 this.message 来使用
+        template: '<span>{{ message }}</span>'
+    })
+    new Vue({
+        el: '#app-string-prop'
+    })
+
+    //
+    Vue.component('child', {
+        props: ['myMessage'],
+        template: '<span>{{myMessage}}</span>'
+    })
+    new Vue({
+        el: '#parent-message',
+        data: {
+            parentMsg: 'Hello Vue!'
+        }
+    })
+
+    var vm3=new Vue({
+        el:'#app3-computed',
+        data:{
+            firstName:'alan',
+            lastName:'Huang'
         },
-        methods: {
-            btnClick: function() {
-                this.$http.get('test.json').then(response => {
-                    console.log(response.body);
-                }, response => {
-                    console.log("error callback")
-                });
+        computed:{
+            fullName:function () {
+                return this.firstName+' '+this.lastName;
             }
         }
     })
-    </script>
+
+    var vm4=new Vue({
+        el:'#app4-v-for-array',
+        data:{
+            items:[
+                {message:'aaaa'},
+                {message:'bbbb'}
+            ]
+        }
+    })
+
+    var vm5= new Vue({
+        el:'#v-for-object',
+        data:{
+            object:{
+                firstName:'Alan',
+                lastName:'Huang',
+                age:30
+            }
+        }
+    })
+
+    var vm6=new Vue({
+        el:'#v-on-count',
+        data:{
+            counter:0
+        }
+    })
+
+    var vmkeyup=new Vue({
+        el:'#v-on-keyup',
+        data:{
+
+        },
+        methods:{
+            doSomeThing:function (message,event) {
+                alert(message);
+                // `event` 是原生 DOM 事件
+                if (event) {
+                    alert(event.target.tagName)
+                }
+            },
+            greet:function (event) {
+                alert('hello');
+                if(event){
+                    alert(event.target.tagName)
+                }
+            }
+        }
+    })
+
+    var vmmodel = new Vue({
+        el:'#v-model-checkbox',
+        data:{
+            checked:false
+        }
+    })
+
+    var vmModelSelect = new Vue({
+        el:'#v-model-select-responsive',
+        data:{
+            selected:'A',
+            options:[
+                {text:'one',value:'A'},
+                {text:'two',value:'B'},
+                {text:'three',value:'C'}
+            ]
+        }
+    })
+
+    Vue.component('button-counter', {
+        template: '<button v-on:click="incrementCounter">{{ counter }}</button>',
+        data: function () {
+            return {
+                counter: 0
+            }
+        },
+        methods: {
+            incrementCounter: function () {
+                this.counter += 1
+                this.$emit('increment')
+            }
+        },
+    })
+
+    new Vue({
+        el: '#counter-event-example',
+        data: {
+            total: 0
+        },
+        methods: {
+            incrementTotal: function () {
+                this.total += 1
+            }
+        }
+    })
+
+    new Vue({
+        el:'#demo-transition',
+        data:{
+            show:true
+        }
+    })
+</script>
 </body>
 
 </html>

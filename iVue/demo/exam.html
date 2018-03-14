@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Little exam</title>
+    <script src="js/vue.js"></script>
+    <script src="js/vue-resource.min.js"></script>
+</head>
+<body>
+<div id="vm-message">
+    <h1>{{message}}</h1>
+</div>
+<div id="vm-model">
+    <input v-model="message">
+    <br>
+    {{message}}
+</div>
+<div id="vm-bind">
+    <span :title="message" :style="style">
+        修改title，鼠标定于此
+    </span>
+</div>
+
+<div id="component-example">
+    <my-component></my-component>
+</div>
+<script>
+    new Vue({
+        el:'#vm-message',
+        data:{
+            message:'this is exam message '
+        }
+    })
+
+    new Vue({
+        el:"#vm-model",
+        data:{
+            message:'v-model input双向绑定'
+        }
+    })
+    new Vue({
+        el:"#vm-bind",
+        data:{
+            message:'bind修改的title属性',
+            style:'color:green'
+        }
+    })
+    Vue.component('my-component',{
+        template:'<div>这行使用了一个简单组件</div>'
+    })
+    new Vue({
+        el:'#component-example'
+    })
+
+</script>
+</body>
+</html>
