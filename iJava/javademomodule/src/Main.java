@@ -1,10 +1,7 @@
 import service.Sort;
 
 import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.*;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 
@@ -59,7 +56,15 @@ public class Main {
 
 //        print("sdf","dsfsd","dsfsd");
 
-        Sort sort etListSort();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        Long epo = localDateTime.toEpochSecond(ZoneOffset.UTC);
+        System.out.println(epo);
+        Calendar cal = Calendar.getInstance();
+        Long calLong = cal.getTimeInMillis();
+        System.out.println(calLong);
+        cal.add(Calendar.DATE,-1);
+        Long pastLong = cal.getTimeInMillis();
+        System.out.println(pastLong);
 
     }
 
@@ -82,6 +87,9 @@ public class Main {
 
     public static void calendarTest() {
         Calendar cal = Calendar.getInstance();
+
+        Long calUtc = cal.getTimeInMillis();//获取utc时间
+
         Date date = new Date();
         Date date111 = cal.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
