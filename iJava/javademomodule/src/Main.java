@@ -1,4 +1,3 @@
-import service.Sort;
 
 import java.text.SimpleDateFormat;
 import java.time.*;
@@ -9,6 +8,9 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Hello World!");
+        MyThread t= new MyThread();
+        t.start();
+
 //        StringBuilder sb = new StringBuilder(222);
 //        pring("000","111");
 //
@@ -148,7 +150,21 @@ public class Main {
         String b="b";
         System.out.println(a.compareTo(b));
     }
+    public static class MyThread  extends Thread{
+        @Override
+        public void run() {
+            long beginTime=System.currentTimeMillis();
+            int count=0;
+            for (int i=0;i<50000000;i++){
+                count=count+(i+1);
+                Thread.yield();
+            }
+            long endTime=System.currentTimeMillis();
+            System.out.println("用时："+(endTime-beginTime)+" 毫秒！");
+        }
+    }
 }
+
 //
 //class Coder extends Employee {
 //    private String keyboard;
